@@ -10,7 +10,7 @@ require_once 'MyPDO.php';
 
 try {
     $mbd = new MyPDO();
-    
+    //PROBAR CON FETCH_NUM, FETCH_ASSOC, FETCH_BOTH
     $pdostmt = $mbd->query('SELECT *'
             . ' from books where title like \'P%\' ');
     while( ($row = $pdostmt->fetch(PDO::FETCH_OBJ))
@@ -18,6 +18,7 @@ try {
        echo "<pre>";
        print_r($row);
        echo"</pre>";
+       //solo con FETCH_OBJ
        echo $row->book_id;
     }
     
