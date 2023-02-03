@@ -11,7 +11,7 @@ require_once 'Book.php';
 function isPersistent($conn) {
     //É persistente?
     $persistente = $conn->getAttribute(PDO::ATTR_PERSISTENT);
-    return $persistente;
+    return $persistente; 
 }
 
 function getLibrosFetch($conn) {
