@@ -35,7 +35,10 @@ $book_repo = new BookRepository();
 //echo"</pre>";
 
 echo "Búsqueda por varias palabras ";
+
+$cadena = $_GET["search"];
 $resultado = $book_repo->buscarPorAutorOTituloPalabras("PHP a b ");
+
 echo "<pre>";
 print_r($resultado);
 echo"</pre>";

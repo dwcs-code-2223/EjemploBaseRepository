@@ -111,13 +111,13 @@ class BookRepository {
             $pdostmt->bindValue($nombre_parametro, "%" . $value . "%");
             $counter++;
         }
-        $pdostmt->debugDumpParams();
+        //$pdostmt->debugDumpParams();
         echo "<br/>";
         $pdostmt->execute();
 
         //Para debug; Vuelca la información contenida en una sentencia preparada directamente en la salida
         //https://www.php.net/manual/es/pdostatement.debugdumpparams.php
-        $pdostmt->debugDumpParams();
+       // $pdostmt->debugDumpParams();
 
         $array = $pdostmt->fetchAll(PDO::FETCH_ASSOC);
         return $array;
