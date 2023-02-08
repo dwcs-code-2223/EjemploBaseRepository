@@ -10,12 +10,16 @@
  *
  * @author mfernandez
  */
-class BookRepository {
+class BookRepository extends BaseRepository {
 
-    private MyPDO $conn;
+   // private MyPDO $conn;
 
     public function __construct() {
-        $this->conn = new MyPDO();
+       // $this->conn = new MyPDO();
+       parent::__construct();
+        $this->table_name="books";
+        $this->pk_name="book_id";
+        $this->class_name="Book";
     }
 
     function getLibrosYAutoresAgrupadosFetchAll() {
@@ -117,7 +121,7 @@ class BookRepository {
 
         //Para debug; Vuelca la información contenida en una sentencia preparada directamente en la salida
         //https://www.php.net/manual/es/pdostatement.debugdumpparams.php
-       // $pdostmt->debugDumpParams();
+        // $pdostmt->debugDumpParams();
 
         $array = $pdostmt->fetchAll(PDO::FETCH_ASSOC);
         return $array;
@@ -144,6 +148,66 @@ class BookRepository {
 
         $array_resultado = implode($operadorBool, $array_query_name);
         return $array_resultado;
+    }
+
+    public function create($book) {
+        $pdostmt = $this->conn->prepare("INSERT INTO books(title, isbn, published_date, publisher_id) VALUES ( :title, :isbn, :published_date, :publisher_id ) ");
+        $pdostmt->bindValue("title", $book->getTitle());
+        $pdostmt->bindValue("isbn", $book->getIsbn());
+        $pdostmt->bindValue("published_date", ($book->getPublished_date() != null) ? $book->getPublished_date()->format("Y-m-d") : null);
+        $pdostmt->bindValue("publisher_id", $book->getPublisher_id());
+
+        $pdostmt->execute();
+
+        //Recuperamos el id de la última inserción
+        $book_id = $this->conn->lastInsertId();
+        //var_dump($book_id);
+        //Establecemos el id como parte del objeto
+        if ($book_id !== false) {
+            $book->setBook_id($book_id);
+            return $book;
+        } else {
+            return null;
+        }
+    }
+
+    public function update($book): bool {
+        $pdostmt = $this->conn->prepare("UPDATE books"
+                . " SET title = :newTitle, isbn = :newIsbn, published_date = :newDate, publisher_id =:newPublisher_id "
+                . "WHERE book_id = :book_id");
+        $pdostmt->bindValue("book_id", $book->getBook_id());
+        $pdostmt->bindValue("newTitle", $book->getTitle());
+        $pdostmt->bindValue("newIsbn", $book->getIsbn());
+        $pdostmt->bindValue("newDate", ($book->getPublished_date() != null) ? $book->getPublished_date()->format("Y-m-d") : null);
+        $pdostmt->bindValue("newPublisher_id", $book->getPublisher_id());
+
+        $pdostmt->execute();
+
+        return ($pdostmt->rowCount() == 1);
+    }
+//
+//    public function delete($id): bool {
+//        $pdostmt = $this->conn->prepare("DELETE FROM books WHERE book_id
+//    = :book_id");
+//        $pdostmt->bindValue("book_id", $id);
+//        $pdostmt->execute();
+//        return ($pdostmt->rowCount() == 1);
+//    }
+
+    public function read($book_id) {
+      $book = parent::read($book_id);
+        if ($book !== false) {
+            //Las propiedades se establecen como cadenas de texto
+            //Lee un string inicialmente y lo convertimos a DateTimeInmutable
+            //Ojo, que la propiedad published_date de Book no puede ser tipada para que no dé problemas
+            $date = Util::stringToDateTimeISO8601($book->getPublished_date());
+            if ($date != null) {
+                $book->setPublished_date($date);
+            }
+            return $book;
+        } else {
+            return null;
+        }
     }
 
 }

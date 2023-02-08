@@ -15,10 +15,61 @@ class Book {
     public string $title;
     public ?string $isbn;
     public ?int $publisher_id;
-    public ?Date $publish_date;
+    public  $published_date;
+    
+     public ?string $autores;
     
     
-    public ?string $autores;
+    public function getBook_id(): int {
+        return $this->book_id;
+    }
+
+    public function getTitle(): string {
+        return $this->title;
+    }
+
+    public function getIsbn(): ?string {
+        return $this->isbn;
+    }
+
+    public function getPublisher_id(): ?int {
+        return $this->publisher_id;
+    }
+
+    public function getPublished_date() {
+        return $this->published_date;
+    }
+
+    public function getAutores(): ?string {
+        return $this->autores;
+    }
+
+    public function setBook_id(int $book_id): void {
+        $this->book_id = $book_id;
+    }
+
+    public function setTitle(string $title): void {
+        $this->title = $title;
+    }
+
+    public function setIsbn(?string $isbn): void {
+        $this->isbn = $isbn;
+    }
+
+    public function setPublisher_id(?int $publisher_id): void {
+        $this->publisher_id = $publisher_id;
+    }
+
+    public function setPublished_date($published_date): void {
+        $this->published_date = $published_date;
+    }
+
+    public function setAutores(?string $autores): void {
+        $this->autores = $autores;
+    }
+
+        
+   
     
     
    

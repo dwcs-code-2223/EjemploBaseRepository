@@ -4,8 +4,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/EmptyPHP.php to edit this template
  */
+require_once 'IBaseRepository.php';
+require_once 'BaseRepository.php';
+
 require_once './BookRepository.php';
 require_once './MyPDO.php';
+require_once 'Book.php';
+require_once 'Util.php';
 
 $book_repo = new BookRepository();
 
@@ -33,12 +38,88 @@ $book_repo = new BookRepository();
 //echo "<pre>";
 //print_r($resultado);
 //echo"</pre>";
+//echo "Búsqueda por varias palabras ";
+//
+//$cadena = $_GET["search"];
+//$resultado = $book_repo->buscarPorAutorOTituloPalabras("PHP a b ");
+//
+//echo "<pre>";
+//print_r($resultado);
+//echo"</pre>";
+//readBook(1);
+updateBook(8);
 
-echo "Búsqueda por varias palabras ";
+function createBook() {
+    global $book_repo;
 
-$cadena = $_GET["search"];
-$resultado = $book_repo->buscarPorAutorOTituloPalabras("PHP a b ");
+    $book = new Book();
+    $book->setTitle("Título 1");
+    $book->setIsbn("fg-hi-jk");
 
-echo "<pre>";
-print_r($resultado);
-echo"</pre>";
+    $date = DateTimeImmutable::
+            createFromFormat("Y-m-d",
+                    "2023-02-08");
+    $book->setPublished_date($date);
+    $book->setPublisher_id(1);
+    $book_creado = $book_repo->create($book);
+    if ($book_creado == null) {
+        echo " No se ha creado el libro<br/>";
+    } else {
+        
+    } echo " Se ha crado el libro con id: " . $book_creado->getBook_id();
+}
+
+function updateBook($id) {
+    global $book_repo;
+    $book = readBook($id);
+    if ($book != null) {
+
+//Modificamos algún dato del libro
+        $book->setTitle("Título 1 v8");
+        $book->setIsbn("fg-hi-jk  v8");
+
+        $date = DateTimeImmutable::
+                createFromFormat("Y-m-d",
+                        "2023-02-01");
+        $book->setPublished_date($date);
+        $book->setPublisher_id(2);
+        $exito = $book_repo->update($book);
+
+        if (!$exito) {
+            echo " No se ha actualizado el libro<br/>";
+        } else {
+            echo " Se ha actualizado el libro<br/>";
+        }
+    }
+}
+
+//$book->setBook_id(9);
+//
+
+
+
+function deleteBook($id) {
+    global $book_repo;
+    $exito = $book_repo->delete($id);
+    if (!$exito) {
+        echo " No se ha borrado el libro<br/>";
+    } else {
+        echo " Se ha borrado el libro<br/>";
+    }
+}
+
+function readBook($id) {
+    global $book_repo;
+    $book = $book_repo->read($id);
+    if ($book != null) {
+        echo "<pre>";
+
+        echo print_r($book);
+        echo "</pre>";
+    } else {
+        echo "No existe el libro con id: $id";
+    }
+}
+
+//
+
