@@ -11,11 +11,11 @@
  * @author wadmin
  */
 class Book {
-    public int $book_id;
-    public string $title;
-    public ?string $isbn;
-    public ?int $publisher_id;
-    public  $published_date;
+    private int $book_id;
+    private string $title;
+    private ?string $isbn;
+    private ?int $publisher_id;
+    private  $published_date;
     
      public ?string $autores;
     

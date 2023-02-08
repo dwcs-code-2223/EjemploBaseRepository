@@ -14,40 +14,51 @@ require_once 'Util.php';
 
 $book_repo = new BookRepository();
 
-//echo " Títulos y autores de libros <br/>";
-//$array = $book_repo->getLibrosYAutoresAgrupadosFetchAll();
-//echo "<pre>";
-//print_r($array);
-//echo"</pre>";
+echo " Títulos y autores de libros <br/>";
+$array = $book_repo->getLibrosYAutoresAgrupadosFetchAll();
+echo "<pre>";
+print_r($array);
+echo"</pre>";
+
+echo " Editores <br/>";
+$editores = $book_repo->getEditores();
+echo "<pre>";
+print_r($editores);
+echo"</pre>";
+
+echo " Autores: <br/>";
+$autores = $book_repo->getAutores();
+echo "<pre>";
+print_r($autores);
+echo"</pre>";
+
+echo "Búsqueda en título: <br/>";
+
+$resultado = $book_repo->buscarPorAutorOTitulo("Y");
+echo "<pre>";
+print_r($resultado);
+echo"</pre>";
+echo "Búsqueda por varias palabras ";
+
+
+$resultado = $book_repo->buscarPorAutorOTituloPalabras("PHP a b ");
+
+echo "<pre>";
+print_r($resultado);
+echo"</pre>";
 //
-//echo " Editores <br/>";
-//$editores = $book_repo->getEditores();
-//echo "<pre>";
-//print_r($editores);
-//echo"</pre>";
 //
-//echo " Autores: <br/>";
-//$autores = $book_repo->getAutores();
-//echo "<pre>";
-//print_r($autores);
-//echo"</pre>";
 //
-//echo "Búsqueda en título: <br/>";
+//Operaciones CRUD: Descomentar la que se desea probar
 //
-//$resultado = $book_repo->buscarPorAutorOTitulo("Y");
-//echo "<pre>";
-//print_r($resultado);
-//echo"</pre>";
-//echo "Búsqueda por varias palabras ";
 //
-//$cadena = $_GET["search"];
-//$resultado = $book_repo->buscarPorAutorOTituloPalabras("PHP a b ");
-//
-//echo "<pre>";
-//print_r($resultado);
-//echo"</pre>";
-//readBook(1);
-updateBook(8);
+//readBook(6);
+//createBook();
+//readBook(7);
+//updateBook(6);
+//readBook(7);
+//deleteBook(9);
+
 
 function createBook() {
     global $book_repo;
@@ -75,7 +86,7 @@ function updateBook($id) {
     if ($book != null) {
 
 //Modificamos algún dato del libro
-        $book->setTitle("Título 1 v8");
+        $book->setTitle("Título 1 v9");
         $book->setIsbn("fg-hi-jk  v8");
 
         $date = DateTimeImmutable::
@@ -86,9 +97,9 @@ function updateBook($id) {
         $exito = $book_repo->update($book);
 
         if (!$exito) {
-            echo " No se ha actualizado el libro<br/>";
+            echo " No se ha actualizado el libro con id: $id <br/>";
         } else {
-            echo " Se ha actualizado el libro<br/>";
+            echo " Se ha actualizado el libro con id: $id<br/>";
         }
     }
 }
@@ -102,9 +113,9 @@ function deleteBook($id) {
     global $book_repo;
     $exito = $book_repo->delete($id);
     if (!$exito) {
-        echo " No se ha borrado el libro<br/>";
+        echo " No se ha borrado el libro con id: $id<br/>";
     } else {
-        echo " Se ha borrado el libro<br/>";
+        echo " Se ha borrado el libro con id: $id <br/>";
     }
 }
 
@@ -119,6 +130,7 @@ function readBook($id) {
     } else {
         echo "No existe el libro con id: $id";
     }
+    return $book;
 }
 
 //
