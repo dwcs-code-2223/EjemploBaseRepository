@@ -17,7 +17,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/EmptyPHPWebPage.php to 
         <p> Introduzca las palabras clave </p>
         <form class='form-control'>
             <div class="input-group">
-                <input name="search" type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+                <input name="search" type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" required/>
                 <button type="submit" class="btn btn-outline-primary">search</button>
             </div>
         </form>
@@ -28,24 +28,32 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/EmptyPHPWebPage.php to 
         require_once 'MyPDO.php';
         $book_repo = new BookRepository();
         $cadena = $_GET["search"];
-        $resultado = $book_repo->buscarPorAutorOTituloPalabras($cadena);
-        if (count($resultado) > 0):
-            ?>
-            <p>Resultados de la búsqueda </p>
-            <ul>
-                <?php foreach ($resultado as $key => $value) : ?>
-                    <li> <?= $resultado[$key]["title"] ?> <?= $resultado[$key]["name"] ?></li>
+        if (trim($cadena) !== ""):
+            $resultado = $book_repo->buscarPorAutorOTituloPalabras($cadena);
+            if (count($resultado) > 0):
+                ?>
+                <p>Resultados de la búsqueda </p>
+                <ul>
+                    <?php foreach ($resultado as $key => $value) : ?>
+                        <li> <?= $resultado[$key]["title"] ?> <?= $resultado[$key]["name"] ?></li>
 
 
-                <?php endforeach; ?>
+                    <?php endforeach; ?>
 
-            </ul>
+                </ul>
 
             <?php else:
+                ?>
+                <div class='alert alert-info'>No se han encontrado resultados</div><?php
+            endif;
+
+        else:
             ?>
-            <div class='alert alert-info'>No se han encontrado resultados</div><?php
+            <div class='alert alert-warning'>Introduzca una cadena que no esté completamente vacía</div>
+        <?php
         endif;
     endif;
     ?>
+
 
 </html>
